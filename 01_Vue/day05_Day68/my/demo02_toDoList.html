@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <todobox></todobox>
+</div>
+
+<script>
+    /* 功能：实现toDoList
+    *  add 核心一：兄弟组件通信
+    *           步骤一：var bus = new Vue();
+    *           步骤二：在准备接受数据的组件即todolist中添加
+    *               bus.$on('addEvent',function(content){...})
+    *           步骤三：触发事件
+    *              bus.$emit('addEvent',123)
+    *           注意：在父组件使用v-for循环时，要将使用该指令的标签加上vue特有的key属性，
+    *               给该标签加上 下标key中的值（目的：vue底层优化渲染ui层的速度）
+    *               且使用:key绑定变量
+    *      核心二：父子组件通信
+    *           将todolist中数组的元素 渲染在todoitem的每一个span标签
+    *
+    * delete 核心：
+    * */
+    Vue.component('todobox',{
+        template:
+            `
+            <div>
+                <todoinput></todoinput>
+                <todolist></todolist>
+            </div>
+            `
+    });
+
+    //实现兄弟组件间通信,创建公共实例
+    var bus = new Vue();
+
+    Vue.component('todoinput',{
+        data:function(){
+            return {
+                userInput:''
+            }
+        },
+        methods:{
+            addToList:function(){
+                //触发自定义事件，并传值
+                console.log(this.userInput)
+                bus.$emit('addEvent',this.userInput);
+                this.userInput = "";//（利用v-model双向数据绑定的特性）清空输入的数据
+            }
+        },
+        template:
+            `
+            <div>
+                <h1>待做事项列表</h1>
+                <input type="text" placeholder="请输入要做的事情" v-model="userInput">
+                <button @click="addToList">Add</button>
+            </div>
+            `
+    });
+
+    //接受方绑定事件
+    Vue.component('todolist',{
+        data:function(){
+          return{//指定数组，接受输入的数据
+            myList:[]
+          }
+        },
+        template:
+            `
+            <ul>
+                <todoitem v-for="(tmp,index) in myList" :key="index" :myIndex="index" :myContent="tmp"></todoitem>
+            </ul>
+            `,
+        beforeMount:function(){
+            //给该组件绑定一个 自定义的事件 和 处理函数
+            bus.$on('addEvent',(content)=>{//this不指myList，使用箭头函数或bind
+                //content就是触发事件时传来的数据
+                console.log("自定义的事件被触发了，接受到的数据为"+content);
+                this.myList.push(content);//把发送来的数据添加到数组中
+            })
+        }
+    });
+
+    Vue.component('todoitem',{
+        methods:{
+            deleteFromList:function(){
+                //得到父组件的数组，从数组中删除指定下标的元素
+                this.$parent.myList.splice(this.myIndex,1);
+            }
+        },
+        props:['myIndex','myContent'],
+        template:
+            `
+            <li>
+                <button @click="deleteFromList">delete</button>
+                <span>{{myContent}}</span>
+            </li>
+            `
+    });
+
+
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <main-component></main-component>
+</div>
+
+<script>
+    Vue.component('header-component',{
+        data:function(){
+          return {
+              isUserLogin:true//根据该值判断是否显示ul
+          }
+        },
+        mounted:function(){//挂载完毕之后触发自定义事件 checkUserLoginEvent
+            this.$emit('checkUserLoginEvent',this.isUserLogin)
+        },
+        template:`<h1>这是页头</h1>`
+    });
+
+    Vue.component('main-component',{
+        data:function(){
+          return {
+              myList:[100,200,300,400,500],
+              isLogin:true//保存传递来的msg
+          }
+        },
+        methods:{
+            recvUserLogin:function(msg){//msg是一个局部变量需要另一个变量保存
+              console.log('接受到事件中的值：'+msg);
+              this.isLogin = msg;
+          }
+        },
+        template:`
+            <div>
+                <header-component @checkUserLoginEvent="recvUserLogin"></header-component>
+                <ul>
+                    <li v-for="tmp in myList" v-if="isLogin">{{tmp}}</li>
+                </ul>
+            </div>
+        `
+    });
+
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

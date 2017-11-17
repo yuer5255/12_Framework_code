@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <h1 v-if="!isDataReady">正在加载数据...</h1>
+    <ul>
+        <li v-for="tmp in myList">{{tmp}}</li>
+    </ul>
+</div>
+
+<script>
+    new Vue({
+        el: '#container',
+        data: {
+            isDataReady:false,
+            myList:[]
+        },
+        created:function(){//vue实例创建完成之后自动调用的方法
+            var that = this;
+            setTimeout(function(){
+                //将h1从DOM树上移除
+                that.isDataReady=true;
+                //数组初始化5条数据
+                that.myList = [100,200,300,400,500];
+            }//.bind(this)   //绑定this 或使用箭头函数
+             ,1000);
+        }
+    })
+</script>
+</body>
+</html>

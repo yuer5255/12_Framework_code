@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <chat-room></chat-room>
+</div>
+
+<script>
+//子组件不需要绑定事件
+    Vue.component('chat-room',{
+        data:function(){
+            return {
+                sonMsg:[]
+            }
+        },
+        methods:{
+          recvMsg:function(msg){
+              console.log("接受来自子组件的消息"+msg);
+              this.sonMsg.push(msg);
+              console.log(this.sonMsg)
+          }
+        },
+        template:`
+            <div>
+                <ul>
+                   <li v-for="tmp in sonMsg">{{tmp}}</li>
+                </ul>
+                <hr>
+                <user-component myLabel="lucy" myTips="plz input" @toFatherEvent="recvMsg"></user-component>
+                <user-component myLabel="mike" myTips="plz input" @toFatherEvent="recvMsg"></user-component>
+            </div>
+        `
+    });
+
+    Vue.component('user-component',{
+        props:['myLabel','myTips'],
+        data:function(){
+          return {//将用户输入的数据保存在变量中
+              userInput:''
+          }
+        },
+        template:`
+            <div>
+                <label>{{myLabel}}</label>
+                <input type="text" v-bind:placeholder="myTips" v-model="userInput">
+                <button @click="sendMsgToParent">发送</button>
+            </div>`,
+        methods:{
+            sendMsgToParent:function(){//触发toFatherEvent事件，把input中用户输入的数据发送,同时，将myLabel中的数据拼接到用户输入的数据中一切返回
+                this.$emit('toFatherEvent',this.myLabel+" : "+this.userInput);
+            }
+        }
+    });
+
+
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+    <div id="container">
+        {{msg}}
+    </div>
+
+    <script>
+        new Vue({
+            el:'#container',//绑定元素,建立关系
+            data:{
+                msg:'Hello VueJS'
+            }//数据都在data中
+        });//新建vue实例
+    </script>
+</body>
+</html>

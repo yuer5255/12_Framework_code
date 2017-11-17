@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <p>{{msg}}</p>
+    <my-login></my-login>
+</div>
+
+<script>
+    /*
+    * 登录窗口
+    * 创建4个组件，分别是my-label，my-input，my-button，my-login（复合组件）
+    * */
+    Vue.component('my-label',{
+       props:['myLabel'],
+       template:`<label>{{myLabel}}</label>`
+    });
+
+    Vue.component('my-input',{
+        props:['myTips'],
+        template:`<input type="text" v-bind:placeholder="myTips"/>`
+    });
+
+    Vue.component('my-button',{
+        props:['myBtn'],
+        template:`<button>{{myBtn}}</button>`
+    });
+
+    Vue.component('my-login',{
+        template:`
+            <form>
+                <my-label myLabel="用户名"></my-label>
+                <my-input myTips="请输入用户名"></my-input>
+                <br>
+                <my-label myLabel="密码"></my-label>
+                <my-input myTips="请输入用户名"></my-input>
+                <br>
+                <my-button myBtn="登录"></my-button>
+                <my-button myBtn="注册"></my-button>
+            </form>
+        `
+    });
+
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

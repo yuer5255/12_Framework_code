@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <!-- 指定一个盛放代码片段的容器 -->
+    <router-view></router-view>
+</div>
+
+<script>
+    var myMain =  Vue.component('main-component',{
+       data:function(){
+         return {
+             uName:''
+         }
+       },
+       template:`
+            <div>
+                <h1>用户名为：{{uName}}</h1>
+            </div>
+       `,
+       beforeMount:function(){
+           //接受参数
+           console.log(this.$route.params);//对象中保存myRoutes中path配置的路径中：后的参数{userName:xxx}
+           this.uName = this.$route.params.userName;
+       }
+    });
+
+    var myLogin = Vue.component('login-component',{
+        data:function(){
+          return{//用户输入的内容
+              user_name:''
+          }
+        },
+        methods:{
+            doLogin:function(){
+                //跳转到主页面，并将用户输入的名字发送过去
+                this.$router.push('/main/'+this.user_name);//push中写的是要跳转的路由地址
+            }
+        },
+        template:`
+            <div>
+                <h1>这是登录页面</h1>
+                <input type="text" placeholder="请输入用户名" v-model="user_name">
+                <button @click="doLogin">登录到主页面</button>
+                <router-link :to="'/main/'+user_name">登录到主页面</router-link>
+            </div>
+       `
+    });
+
+    var notFound = Vue.component('not-found',{
+        template:`
+            <div>
+                <h1>404 Page Not Found</h1>
+                <router-link to="/login">返回首页</router-link>
+            </div>`
+    });
+
+    //配置路由词典
+    const myRoutes = [
+        {path:'',component:myLogin},
+        {path:'/login',component:myLogin},
+        {path:'/main/:userName',component:myMain},
+        {path:'*',component:notFound}//没有匹配到上述任何一个地址，就会跳转到404页面
+    ];
+
+    const myRouter = new VueRouter({
+        routes:myRoutes
+    })
+
+    new Vue({
+        router:myRouter,
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

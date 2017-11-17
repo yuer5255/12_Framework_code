@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
+    <title></title>
+</head>
+<body>
+<!--
+列表页(my-list)
+    有一个input标签和button按钮（添加：将用户的输入直接添加到当前的列表中）、
+    一个列表（支持点击，当点击列表中的列表项时，将当前序号传递给详情页）
+详情页（my-detail）
+    显示一个序号（从列表页传递过来的）
+
+步骤：
+    1、引入对应的js（vue.js vue-router.js）
+    2、指定容器（<router-view>）
+    3、创建组件
+    4、配置路由词典
+    5、测试
+    6、实现跳转功能
+        6.1、明确发送、接收
+        6.2、配置接收方
+        6.3、接受
+        6.4、发送
+-->
+<div id="container">
+    <router-view></router-view>
+</div>
+
+<script>
+    var myList = Vue.component('my-list',{
+        template:`
+            <div>
+                <h1>列表页</h1>
+                <input type="text" v-model.number="myInput"/>
+                <button @click="addList" :disabled="hasRepeatData">添加</button>
+                <p v-show="hasRepeatData">有重复数据</p>
+                <ul>
+                    <li v-for="(tmp,key) in scoreList">
+                        <router-link :to="'/detail/'+key">{{tmp}}</router-link>
+                        <!--<p @click="jumpToDetail(key)">{{tmp}}</p>-->
+                    </li>
+                </ul>
+            </div>
+        `,
+        data:function(){
+            return{
+                scoreList:[10,20,30],
+                myInput:"",
+                hasRepeatData:false//是否有重复数据
+            }
+        },
+        watch:{
+            myInput:function(){
+              console.log("当前用户输入的内容为："+this.myInput);
+              if(this.scoreList.indexOf(this.myInput) == -1){
+                  this.hasRepeatData = false;
+              }else{
+                  this.hasRepeatData = true;
+              }
+            }
+        },
+        methods:{
+            addList:function(){
+                //向数组中插入元素
+                this.scoreList.push(this.myInput);
+            },
+            //js方式
+            jumpToDetail:function(itemIndex){
+                this.$router.push('/detail/'+itemIndex);
+            }
+        }
+    })
+
+    var myDetail = Vue.component('my-detail',{
+        data:function(){
+          return{
+              myIndex:''
+          }
+        },
+        template:`
+            <div>
+                <h1>详情页</h1>
+                <p>{{myIndex}}</p>
+            </div>
+        `,
+        beforeMount:function(){
+            //接收方获取传递来的参数赋值给变量
+            this.myIndex = this.$route.params.index;
+        }
+    })
+
+    var notFound = Vue.component('my-detail',{
+        template:`
+            <div>
+                <h1>404</h1>
+            </div>
+        `
+    })
+
+    new Vue({
+        el: '#container',
+        router:new VueRouter({
+            routes:[
+                {path:'',component:myList},
+                {path:'/list',component:myList},
+                {path:'/detail/:index',component:myDetail},
+                {path:'*',component:notFound}
+            ]
+        }),
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

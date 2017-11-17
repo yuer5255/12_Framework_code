@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <parent-component></parent-component>
+</div>
+<!--子组件传递给父组件-->
+<script>
+    /*
+     * 总结 ：props down  , events up
+     * 1、在父组件中，定义一个方法，用来接收子组件通过事件传递过来的值
+     *      其中：方法定义在methods中，
+     *      methods:{
+     *          recv:function(msg){
+     *              //参数msg就是子组件通过事件出来的数据
+     *          }
+     *      }
+     *
+     * 2、绑定事件处理函数
+     *      事件一般都是自定义事件
+     *      <child-component @myEvent="recvMsg"></child-comonent>
+     *
+     * 3、在子组件触发事件
+     *      this.$emit('myEvent',data)
+     *      触发一个叫做myEvent的事件，同时把data的数据传递给事件对应的处理函数
+     */
+
+    Vue.component('parent-component',{
+        data:function(){//要在视图中显示的话，需要在data中定义数据
+            return {//目的：保存子组件传递来的数据
+                sonMsg:''
+            }
+        },
+       methods:{
+           recvMsg:function(msg){//事件处理函数中的参数就是通过事件传递过来的数据
+              console.log("父组件接收到子组件触发的事件："+msg);
+              this.sonMsg = msg;//将传递过来的数据保存到data中的变量中
+           }
+       },
+       template:`
+            <div>
+                <h1>这是父组件</h1>
+                <p>子组件传递来的数据为{{sonMsg}}</p>
+                <hr>
+                <child-component @customEvent="recvMsg"></child-component>
+            </div>
+       `
+    });
+
+    Vue.component('child-component',{
+       methods:{//子组件触发点击事件时
+            sendMsgToFather:function(){
+                //触发绑定给子组件的自定义事件
+                this.$emit(//第一个参数，触发的事件名，第二个参数：要传递的参数
+                    'customEvent',
+                    '听说你要给我一个传家宝'
+                );
+            }
+        },
+        //给子组件绑定点击处理的方法
+       template:`
+            <div>
+                <p>这是子组件</p>
+                <button @click="sendMsgToFather">sendToFather</button>
+            </div>
+           `
+    });
+
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <p>{{msg}}</p>
+    <!-- 单击按钮时，count加一 当count等于5时，输出this is a test-->
+    <button @click="handleClick">按钮</button>
+    <!-- 在调用时 使用 v-自定义指令名 -->
+    <!-- count的值显示在bindings对象的value属性中 -->
+    <h1 v-if="count<6" v-change="count">it is a custom directive</h1>
+</div>
+
+<script>
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue',
+            count:0
+        },
+        methods:{
+            handleClick:function(){
+                this.count++;//单击按钮，count自增
+            }
+        },
+        directives:{//定义指令
+            change:{//指令的名字为change，{}中定义该指令进行的操作
+                // 在指令对应的配置对象中，有三个处理函数，分别是bind/update/unbind
+                bind:function(el,bindings){//bind的两个参数el(调用指令的元素),bindings(对象，包含指令相关信息)
+                    console.log("指令已经绑定到元素上了");
+                    console.log(el);
+                    console.log(bindings);
+                    //将传递来的参数显示在调用该指令的元素的innerHTML中
+                    el.innerHTML = bindings.value;
+                },
+                update:function(el,bindings){
+                    console.log("指令的数据变化了");
+                    console.log(el);
+                    console.log(bindings);
+                    el.innerHTML = bindings.value;
+                    if(bindings.value==5){
+                        console.log("this is a test");
+                    }
+                },
+                unbind:function(){//绑定的元素在dom树中被移除时调用
+                    console.log("解除绑定了");
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <button @click="modifyMsg">修改msg</button>
+    <!-- 方向一：将定义好的数据 绑定到视图
+                实现：双花括号；常见Vue指令 v-for v-if v-show...
+    -->
+    <p>{{msg}}</p>
+
+    <!-- 方向二：将视图中用户表单操作（多数情况为表单控件input/textarea/select）的结果 绑定到指定的视图
+                实现：v-modal
+    -->
+    <!-- .lazy 在输入完之后，失去焦点时才更新   取代input 监听 change事件-->
+    <input type="text" v-model.lazy="userAddress"/>
+    <p>{{"用户输入的数据为"+userAddress}}</p>
+
+    <!-- 两个输入框，一个按钮，点击按钮时将输入框中的数据求和，结果显示在控制台 -->
+    <!-- .number（修饰符）将字符串强制转换成数字 -->
+    输入要计算的数据a和b<input type="text" v-model.number="num1"/>
+    <input type="text" v-model.number="num2"/>
+    <br/>
+    <button @click="Total">求和</button>
+    <br/>
+
+    <!-- 显示输入字符串的长度-->
+    <input type="text" v-model.trim="myNotes"/>
+    <p>{{myNotes.length}}</p>
+
+</div>
+
+<script>
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue',
+            userAddress:'北京',
+            num1:0,
+            num2:0,
+            myNotes:''
+        },
+        methods:{
+            modifyMsg:function(){
+                this.msg='Hello Data Binding';
+            },
+            Total:function(){
+                console.log(this.num1 + this.num2);
+            }
+        }
+    })
+</script>
+</body>
+</html>

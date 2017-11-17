@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+    <!--
+        创建一个组件，my-game:
+	猜数字大小。
+
+	组件：一个input和一个p构成
+	当组件准备挂载的时候，初始化一个随机数，在input输入的时候，
+	如果输入的数字小了，在p显示：输入的太小了；
+	如果输入的数字大了，在p显示：输入的太大了；否则就提示输入正确。
+    -->
+    <div id="container">
+        <my-game></my-game>
+    </div>
+
+    <script>
+        Vue.component('my-game',{
+            data:function () {
+                return {
+                    num:'',
+                    msg:'',
+                    myinput:''
+                }
+            },
+            template:`
+                    <div>
+                        <h1>猜数字游戏</h1>
+                        请输入一个数字<input type="text" v-model.number="num">
+                        <p>{{msg}}</p>
+                    </div>
+            `,
+            beforeMount:function(){
+                this.myinput  = Math.floor(Math.random()*100);
+            },
+            watch:{
+                num:function(){
+                    console.log(this.num);
+                    console.log(this.myinput);
+                    if(this.num>this.myinput){
+                        this.msg='猜大了';
+                    }else if(this.num<this.myinput){
+                        this.msg='猜小了';
+                    }else if(this.num==this.myinput){
+                        this.msg='猜对了';
+                    }else{
+                        this.msg='请输入数字';
+                    }
+                }
+            }
+        })
+
+        new Vue({
+            el:'#container',
+            data:{
+                msg:'Hello Vue'
+            }
+        })
+    </script>
+</body>
+</html>

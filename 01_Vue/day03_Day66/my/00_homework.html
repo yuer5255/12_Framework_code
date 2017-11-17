@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <main-component></main-component>
+</div>
+
+<script>
+    Vue.component('main-component',{
+        methods:{
+          modifyCount:function(){
+              this.count++;
+          }
+        },
+        data:function(){
+          return{
+              count:0,
+              isBtnEnable:true
+          }
+        },
+        template:`
+            <div>
+                <button @click="modifyCount"  :disabled="!isBtnEnable">click me</button>
+                <hr/>
+                <son-component :myCount="count"></son-component>
+            </div>
+        `
+    });
+
+    Vue.component('son-component',{
+        props:['myCount'],
+        template:`
+            <p>{{myCount}}</p>
+        `,
+        updated:function(){//当子组件的数据变化时，对应的处理函数
+            console.log('子组件的数据有变化');
+            if(this.myCount>10){
+                //找到父组件的isBtnEnable设置为false，两种方式
+                this.$parent.isBtnEnable = false;
+            }
+        }
+    });
+
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

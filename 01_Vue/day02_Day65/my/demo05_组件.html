@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <p>{{msg}}</p>
+    <!-- 完成组件的调用:与使用普通的html标签一样 -->
+    <my-component></my-component>
+</div>
+
+<script>
+    //创建组件的方式：第一个参数：组件名，第二个参数：对象{template:...}
+    Vue.component('my-component',{
+        template:'<h1>Hello Component</h1>'
+    });
+
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

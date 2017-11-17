@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+    <div id="container">
+        <table border="1" width="50%">
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>sex</th>
+                    <th>age</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="tmp in person">
+                    <td v-for="value in tmp">
+                        {{value}}
+                    </td>
+                    <!-- 当表头不固定时使用 -->
+                    <!--
+                    <td>{{tmp.name}}</td>
+                    <td>{{tmp.sex}}</td>
+                    <td>{{tmp.age}}</td>
+                    -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        new Vue({
+           el:'#container',
+           data:{
+               person:[
+                   {name:'Tom',sex:'男',age:20},
+                   {name:'Jerry',sex:'男',age:21},
+                   {name:'Mary',sex:'女',age:22},
+                   {name:'Amy',sex:'女',age:23},
+                   {name:'Kimi',sex:'男',age:22}
+               ]
+           }
+        });
+    </script>
+</body>
+</html>

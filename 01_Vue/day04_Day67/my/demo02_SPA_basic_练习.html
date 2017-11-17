@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <!--第一步：加载js-->
+    <script src="js/vue-router.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <!--第二步：通过routerView指定盛放组件的容器-->
+    <router-view></router-view>
+</div>
+
+<script>
+    //第三步：创建组件
+    var testCollect = Vue.component('collect',{
+        template:`
+            <div>
+                <h1>这是我的收藏页</h1>
+            </div>`
+    });
+
+    var testDetail = Vue.component('detail',{
+        template:`
+            <div>
+                <h1>这是我的详情页</h1>
+            </div>`
+    });
+
+    var testOrder = Vue.component('order',{
+        template:`
+            <div>
+                <h1>这是我的订单页</h1>
+            </div>`
+    });
+
+    //第四步：配置路由词典
+    const myRoutes = [
+        {path:'',component:testCollect},
+        {path:'/myCollect',component:testCollect},
+        {path:'/myDetail',component:testDetail},
+        {path:'/myOrder',component:testOrder}
+    ];
+
+    const myRouter = new VueRouter({
+        routes:myRoutes
+    })
+
+    //指定路由
+    new Vue({
+        router:myRouter,
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <!-- 实现一个自定义指令，在调用指令是，传递参数，根据参数的值，修改调用该指令的元素的背景色 -->
+    <!--调用时，使用-连接的命名方式 -->
+    <!--<p v-change-background-color="'#f00'">{{msg}}</p>--><!--如果不希望将值转为变量，可以用单引号引起来，但不建议这么做，因为这样的话值就被写死了-->
+    <p v-change-background-color="changeColor">{{msg}}</p>
+</div>
+
+<script>
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue',
+            changeColor:'red'
+        },
+        directives:{
+            changeBackgroundColor:{//命名时使用小驼峰命名方式
+                bind:function(el,bindings){
+                    console.log(el,bindings);
+                    el.style.backgroundColor=bindings.value;
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

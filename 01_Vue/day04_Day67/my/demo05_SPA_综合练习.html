@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
+    <title></title>
+</head>
+<body>
+<div id="container">
+    <router-view></router-view>
+</div>
+
+<script>
+    var myList =  Vue.component('list-component',{
+        data:function(){
+          return {
+              product_list:[100,200,300,400,500]
+          }
+        },
+        template:
+        `
+        <div>
+            <ul>
+                <!--<li v-for="tmp in product_list"><a href="#">{{tmp}}</a></li>-->
+                <li v-for="(value,key) in product_list"><router-link :to="'/myDetail/'+key">{{value}}</router-link></li>
+            </ul>
+        </div>
+            `
+    });
+
+    var myDetail = Vue.component('detail-component',{
+        data:function(){
+          return{
+              showKey:0
+          }
+        },
+        template:
+        `
+        <div>
+            <p>这是id为{{showKey}}的详情信息</p>
+        </div>
+        `,
+        beforeMount:function(){
+            console.log(this.$route.params.key);
+            this.showKey = this.$route.params.key;
+        }
+    });
+
+    var notFound = Vue.component('not-found',{
+        template:`<div><h1>404 Page Not Found</h1></div>`
+    });
+
+    new Vue({
+        router:new VueRouter({
+           routes: [
+               {path:'',component:myList},//当路由地址为空，显示指定页面
+               {path:'/myList',component:myList,alias:'/lists'},
+               {path:'/list',redirect:'/myList'},
+               {path:'/myDetail/:key',component:myDetail},
+               {path:'*',component:notFound}//异常处理
+           ]
+        }),
+        el: '#container',
+        data: {
+            msg: 'Hello Vue'
+        }
+    })
+</script>
+</body>
+</html>

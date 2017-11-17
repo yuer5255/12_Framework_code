@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="js/vue.js"></script>
+    <title></title>
+</head>
+<body>
+
+<!--
+    实现一个过滤器myTextTransform
+    功能是：实现将一个字符串转换为大写or小写，取决于传递给过滤器的参数，
+    如果是true则转换为大写，否则为小写
+-->
+
+<div id="container">
+    <p>{{msg}}</p>
+    <h1>{{str | myTextTransform(true)}}</h1>
+</div>
+<script>
+    new Vue({
+        el: '#container',
+        data: {
+            msg: 'Hello Vue',
+            str:'This is a Test'
+        },
+        filters:{
+            myTextTransform:function(myInput,arg1){
+                return arg1 ? myInput.toUpperCase(): myInput.toLowerCase();
+            }
+        }
+    })
+</script>
+</body>
+</html>
